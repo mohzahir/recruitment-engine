@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+
+        // 1. أضف هذا السطر لإيقاف فحص العلاقات مؤقتاً
+        Schema::disableForeignKeyConstraints();
+
         // 1. حذف جدول الحملات القديم (لتنظيف قاعدة البيانات)
         Schema::dropIfExists('campaigns');
 
@@ -19,6 +23,9 @@ return new class extends Migration
             $table->string('status')->default('active'); // active, paused, archived
             $table->timestamps();
         });
+
+        // 2. أضف هذا السطر لإعادة تفعيل فحص العلاقات
+        Schema::enableForeignKeyConstraints();
 
         // 3. ربط قوالب الإيميل بالحملة
         Schema::table('email_templates', function (Blueprint $table) {
@@ -34,6 +41,8 @@ return new class extends Migration
             // هذا الحقل السحري لدورة الـ 90 يوم (إيقاظ الموتى)
             $table->timestamp('dormant_until')->nullable(); 
         });
+
+        
     }
 
     public function down(): void
