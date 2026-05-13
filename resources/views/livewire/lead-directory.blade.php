@@ -171,13 +171,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700">مجال العمل (Industry)</label>
-                                <select wire:model="targetIndustry" class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm text-sm">
-                                    <option value="">اختر المجال...</option>
-                                    <option value="Hospitals">مستشفيات</option>
-                                    <option value="Clinics">مجمعات طبية وعيادات</option>
-                                    <option value="Software Companies">شركات برمجيات وتقنية</option>
-                                    <option value="Real Estate">شركات عقارية</option>
-                                </select>
+                                <input type="text" wire:model="targetIndustry" placeholder="مثال: مطاعم، مستشفيات، شركات تسويق، مصانع..." class="mt-1 w-full border border-gray-300 rounded-md p-2 shadow-sm text-sm">
                             </div>
                             <div class="pt-4">
                                 <button wire:click="fetchCompaniesOnly" wire:loading.attr="disabled" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow hover:bg-blue-700 transition flex justify-center items-center gap-2 disabled:opacity-50">
