@@ -202,7 +202,7 @@ class LeadDirectory extends Component
                 'Cache-Control' => 'no-cache',
                 'Content-Type' => 'application/json',
                 'X-Api-Key' => $apiKey 
-            ])->timeout(20)->post('https://api.apollo.io/v1/mixed_people/search', $payload);
+            ])->timeout(20)->post('https://api.apollo.io/v1/mixed_people/api_search', $payload);
 
             if ($response->successful() && isset($response['people'])) {
                 $people = $response['people'];
