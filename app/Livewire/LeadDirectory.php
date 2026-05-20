@@ -189,12 +189,24 @@ class LeadDirectory extends Component
             return;
         }
 
-        // 1. أزلنا api_key من هنا
+        // تجهيز مصفوفة البحث الأساسية
         $payload = [
-            'q_organization_name' => $lead->company,
             'page' => 1,
             'per_page' => 10,
         ];
+
+        // التحقق مما إذا كانت الشركة تمتلك موقعاً إلكترونياً مسجلاً في النظام
+        if (!empty($lead->website)) {
+            // استخراج النطاق الصافي (Domain) من الرابط (مثال: من https://www.company.com إلى company.com)
+            $domain = parse_url($lead->website, PHP_URL_HOST) ?? $lead->website;
+            $domain = str_replace('www.', '', $domain);
+            
+            // توجيه أبولو للبحث بالنطاق (أدق بنسبة 99%)
+            $payload['q_organization_domains'] = $domain;
+        } else {
+            // إذا لم يوجد موقع، نعتمد على البحث بالاسم
+            $payload['q_organization_name'] = $lead->company;
+        }
 
         try {
             // 2. أضفنا مفتاح الأمان X-Api-Key هنا في الـ Headers
