@@ -232,7 +232,18 @@ class LeadDirectory extends Component
                     session()->flash('error', "لم يتم العثور على إيميلات لموظفي {$lead->company}.");
                 }
             } else {
-                session()->flash('error', 'رفض أبولو الطلب. قد يكون الرصيد نفد.');
+                // التقاط الخطأ الحقيقي من خوادم أبولو
+                $errorResponse = $response->json();
+                $errorMessage = $errorResponse['error'] ?? $response->body();
+                
+                session()->flash('error', 'رفض أبولو الطلب. السبب: ' . json_encode($errorMessage));
+                
+                // تسجيل الخطأ في ملف الـ Logs للرجوع إليه
+                \Illuminate\Support\Facades\Log::error('Apollo API Failed', [
+                    'status' => $response->status(),
+                    'response' => $errorResponse,
+                    'company' => $lead->company
+                ]);
             }
         } catch (\Exception $e) {
             session()->flash('error', 'خطأ في الاتصال بأبولو: ' . $e->getMessage());
