@@ -189,17 +189,19 @@ class LeadDirectory extends Component
             return;
         }
 
+        // 1. أزلنا api_key من هنا
         $payload = [
-            'api_key' => $apiKey,
             'q_organization_name' => $lead->company,
             'page' => 1,
             'per_page' => 10,
         ];
 
         try {
+            // 2. أضفنا مفتاح الأمان X-Api-Key هنا في الـ Headers
             $response = Http::withoutVerifying()->withHeaders([
                 'Cache-Control' => 'no-cache',
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
+                'X-Api-Key' => $apiKey 
             ])->timeout(20)->post('https://api.apollo.io/v1/mixed_people/search', $payload);
 
             if ($response->successful() && isset($response['people'])) {
